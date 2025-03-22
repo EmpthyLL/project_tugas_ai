@@ -24,6 +24,7 @@ export default function SelectTab() {
   useEffect(() => {
     async function Get() {
       const { voices: data } = await getVoices();
+      console.log(data);
       setVoices(data.map(({ voice_id, name }) => ({ id: voice_id, name })));
     }
 
@@ -71,6 +72,7 @@ export default function SelectTab() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         className="mb-4"
+        rows={4}
         disabled={loading} // Disable input if a voice is uploaded
       />
       <Button
