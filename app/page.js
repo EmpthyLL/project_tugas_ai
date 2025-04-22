@@ -9,7 +9,10 @@ export default function VoiceCloner() {
   const router = useRouter();
   const dataParams = useSearchParams();
   return (
-    <div className="p-4 w-full max-w-xl mx-auto">
+    <section className="bg-bannerImg bg-no-repeat bg-cover bg-bottom">
+      <div className="w-full h-screen flex items-end bg-blackOverlay">
+        <div className="container mx-auto mb-40">
+        <div className="p-4 w-full max-w-xl mx-auto">
       <Tabs
         value={dataParams.get("tab") || "select"}
         onValueChange={(val) => {
@@ -29,5 +32,10 @@ export default function VoiceCloner() {
         </TabsContent>
       </Tabs>
     </div>
+        </div>
+      </div>
+       
+    </section>
+   
   );
 }

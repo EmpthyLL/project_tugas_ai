@@ -8,6 +8,10 @@ module.exports = {
   ],
   theme: {
   	extend: {
+		backgroundImage: {
+			bannerImg: "url('/img/change_voice.jpg')",
+			blackOverlay: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%"
+		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
