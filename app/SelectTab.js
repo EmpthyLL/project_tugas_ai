@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 import { generateVoice, getVoices } from "@/lib/api";
 import { Button } from "@/components/button";
 import {
@@ -14,12 +17,31 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowDownToLine } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
+const schema = yup.object({
+  description: yup.string().required().min(20).max(1000),
+  text: yup.string().required().min(100).max(1000),
+});
+
 export default function SelectTab() {
-  const [text, setText] = useState("");
   const [audioUrl, setAudioUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [voiceId, setVoiceId] = useState(null);
   const [voices, setVoices] = useState([]);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch, formState: { errors },
+  } = useForm({resolver: yupResolver(schema),
+    defaultValues: {
+      description: "",
+      text:"",
+    },
+  });
+
+  const text = watch('text');
+  const description = watch('description');
 
   useEffect(() => {
     async function Get() {
@@ -53,7 +75,8 @@ export default function SelectTab() {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Generate Speech</h2>
-      <div className="mb-4">
+      <form onSubmit={handleSubmit(handleGenerate)} className="flex flex-col gap-4">
+        <div className="mb-4">
         <Select onValueChange={setVoiceId}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a voice" />
@@ -69,11 +92,10 @@ export default function SelectTab() {
       </div>
       <Textarea
         placeholder="Enter text to say"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
+        {...register("text")}
         className="mb-4"
         rows={4}
-        disabled={loading} // Disable input if a voice is uploaded
+        disabled={loading}
       />
       <Button
         onClick={handleGenerate}
@@ -82,6 +104,8 @@ export default function SelectTab() {
       >
         {loading ? "Generating..." : "Generate Speech"}
       </Button>
+      </form>
+      {errors.text && <p className="text-red-500">{errors.text.message}</p>}
 
       {audioUrl && (
         <div className="mt-4 flex gap-5 justify-center">
