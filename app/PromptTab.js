@@ -5,11 +5,42 @@ import { voiceDesign } from "@/lib/api";
 import { ArrowDownToLine } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object({
+  description: yup
+    .string()
+    .required()
+    .min(20, "Description must be at least 20 characters")
+    .max(1000),
+  text: yup
+    .string()
+    .required()
+    .min(100, "Text must be at least 100 characters")
+    .max(1000),
+});
+
 export default function PromptTab() {
-  const [description, setDescription] = useState("");
-  const [text, setText] = useState("");
   const [audioSources, setAudioSources] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      description: "",
+      text: "",
+    },
+  });
+
+  const text = watch("text");
+  const description = watch("description");
 
   // Generate the voice and get audio URLs
   const handleGeneratePrompt = async () => {
@@ -44,30 +75,68 @@ export default function PromptTab() {
   return (
     <div className="my-4">
       <h2 className="text-xl font-semibold mb-4">Generate Prompt</h2>
-      <Textarea
-        type="text"
-        placeholder="Enter voice description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        className="my-4"
-        disabled={loading}
-      />
-      <Textarea
-        type="text"
-        placeholder="Enter text to say"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        className="my-4"
-        rows={4}
-        disabled={loading}
-      />
-      <Button
-        onClick={handleGeneratePrompt}
-        isLoading={loading}
-        disabled={!text || !description}
+      <form
+        onSubmit={handleSubmit(handleGeneratePrompt)}
+        className="flex flex-col gap-4"
       >
-        {loading ? "Generating..." : "Generate Prompt"}
-      </Button>
+        <Textarea
+          type="text"
+          placeholder="Enter voice description"
+          {...register("description")}
+          className="my-4"
+          disabled={loading}
+        />
+        {errors.description && (
+          <div className="flex items-center gap-2 bg-red-500 border text-white px-4 py-3 rounded-md animate-fade-in">
+            <svg
+              className="w-5 h-5 text-white"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11V7a1 1 0 00-2 0v4a1 1 0 002 0zm0 6a1 1 0 10-2 0 1 1 0 002 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <p className="text-sm font-semibold">
+              {errors.description.message}
+            </p>
+          </div>
+        )}
+        <Textarea
+          type="text"
+          placeholder="Enter text to say"
+          {...register("text")}
+          className="my-4"
+          rows={4}
+          disabled={loading}
+        />
+        {errors.text && (
+          <div className="flex items-center gap-2 bg-red-500 border text-white px-4 py-3 rounded-md animate-fade-in">
+            <svg
+              className="w-5 h-5 text-white"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11V7a1 1 0 00-2 0v4a1 1 0 002 0zm0 6a1 1 0 10-2 0 1 1 0 002 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <p className="text-sm font-semibold">{errors.text.message}</p>
+          </div>
+        )}
+        <Button
+          type="submit"
+          isLoading={loading}
+          disabled={!text || !description}
+          className="w-[150px]"
+        >
+          {loading ? "Generating..." : "Generate Prompt"}
+        </Button>
+      </form>
 
       {/* Render audio previews */}
       {audioSources &&
