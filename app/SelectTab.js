@@ -52,7 +52,6 @@ export default function SelectTab() {
       console.log(data);
       setVoices(data.map(({ voice_id, name }) => ({ id: voice_id, name })));
     }
-
     Get();
   }, []);
 
@@ -69,25 +68,28 @@ export default function SelectTab() {
       setLoading(false);
     }
   };
+
   const handleDownload = (audioUrl) => {
     const a = document.createElement("a");
     a.href = audioUrl;
     a.download = `voice_preview.mp3`;
     a.click();
   };
+
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Generate Speech</h2>
+    <div className="p-6 bg-gray-800 bg-opacity-50 rounded-2xl shadow-lg text-white">
+      <h2 className="text-2xl font-bold mb-6 text-center text-blue-400">Generate Speech</h2>
       <form
         onSubmit={handleSubmit(handleGenerate)}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-6"
       >
-        <div className="mb-4">
+        <div className="flex flex-col gap-2">
+          <Label className="text-blue-300">Select Voice</Label>
           <Select onValueChange={setVoiceId}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full bg-gray-800 border-blue-500 text-white">
               <SelectValue placeholder="Select a voice" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-gray-800 text-white">
               {voices.map((item, key) => (
                 <SelectItem key={key} value={item.id}>
                   {item.name}
@@ -96,57 +98,46 @@ export default function SelectTab() {
             </SelectContent>
           </Select>
         </div>
-        <Textarea
-          placeholder="Enter text to say"
-          {...register("text")}
-          className="mb-4"
-          rows={4}
-          disabled={loading}
-        />
-        {errors.text && (
-          <div className="flex items-center gap-2 bg-red-500 border text-white px-4 py-3 rounded-md animate-fade-in">
-            <svg
-              className="w-5 h-5 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11V7a1 1 0 00-2 0v4a1 1 0 002 0zm0 6a1 1 0 10-2 0 1 1 0 002 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <p className="text-sm font-semibold">{errors.text.message}</p>
-          </div>
-        )}
+
+        <div className="flex flex-col gap-2">
+          <Label className="text-blue-300">Text</Label>
+          <Textarea
+            placeholder="Enter text to say"
+            {...register("text")}
+            className="bg-gray-800 border-blue-500 text-white placeholder-gray-400"
+            rows={6}
+            disabled={loading}
+          />
+          {errors.text && (
+            <p className="text-red-400 text-sm">{errors.text.message}</p>
+          )}
+        </div>
 
         <Button
           type="submit"
           isLoading={loading}
           disabled={!text || !voiceId}
-          className="w-[150px]"
+          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90"
         >
           {loading ? "Generating..." : "Generate Speech"}
         </Button>
       </form>
 
       {audioUrl && (
-        <div className="mt-4 flex gap-5 justify-center">
-          <div>
-            <Label>Preview</Label>
-            <audio controls>
+        <div className="mt-6 flex flex-col items-center gap-4">
+          <div className="w-full">
+            <Label className="text-blue-300">Preview</Label>
+            <audio controls className="w-full mt-2">
               <source src={audioUrl} type="audio/mpeg" />
               Your browser does not support the audio element.
             </audio>
           </div>
-          <div className="flex items-center space-x-2 mt-2">
-            <Button
-              onClick={() => handleDownload(audioUrl)}
-              className="text-sm"
-            >
-              <ArrowDownToLine />
-            </Button>
-          </div>
+          <Button
+            onClick={() => handleDownload(audioUrl)}
+            className="flex items-center gap-2 bg-gradient-to-r from-green-400 to-green-600 hover:opacity-90"
+          >
+            <ArrowDownToLine className="w-5 h-5" /> Download
+          </Button>
         </div>
       )}
     </div>
