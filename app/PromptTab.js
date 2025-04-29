@@ -42,14 +42,13 @@ export default function PromptTab() {
   const text = watch("text");
   const description = watch("description");
 
-  // Generate the voice and get audio URLs
   const handleGeneratePrompt = async () => {
     if (!text || !description) return;
     setLoading(true);
-    setAudioSources([]); // Clear previous audio sources
+    setAudioSources([]);
     try {
       const audioUrls = await voiceDesign(description, text);
-      if (audioUrls) setAudioSources(audioUrls); // Set the new audio sources
+      if (audioUrls) setAudioSources(audioUrls);
     } catch (error) {
       console.log(error);
     } finally {
@@ -57,108 +56,79 @@ export default function PromptTab() {
     }
   };
 
-  // Reset the form and audio sources
-  const handleReset = () => {
-    setDescription("");
-    setText("");
-    setAudioSources([]);
-  };
-
-  // Download the audio file
   const handleDownload = (audioUrl, index) => {
     const a = document.createElement("a");
     a.href = audioUrl;
-    a.download = `voice_preview_${index + 1}.mp3`; // Set the file name
+    a.download = `voice_preview_${index + 1}.mp3`;
     a.click();
   };
 
   return (
-    <div className="my-4">
-      <h2 className="text-xl font-semibold mb-4">Generate Prompt</h2>
-      <form
-        onSubmit={handleSubmit(handleGeneratePrompt)}
-        className="flex flex-col gap-4"
-      >
-        <Textarea
-          type="text"
-          placeholder="Enter voice description"
-          {...register("description")}
-          className="my-4"
-          disabled={loading}
-        />
-        {errors.description && (
-          <div className="flex items-center gap-2 bg-red-500 border text-white px-4 py-3 rounded-md animate-fade-in">
-            <svg
-              className="w-5 h-5 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11V7a1 1 0 00-2 0v4a1 1 0 002 0zm0 6a1 1 0 10-2 0 1 1 0 002 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <p className="text-sm font-semibold">
-              {errors.description.message}
-            </p>
-          </div>
-        )}
-        <Textarea
-          type="text"
-          placeholder="Enter text to say"
-          {...register("text")}
-          className="my-4"
-          rows={4}
-          disabled={loading}
-        />
-        {errors.text && (
-          <div className="flex items-center gap-2 bg-red-500 border text-white px-4 py-3 rounded-md animate-fade-in">
-            <svg
-              className="w-5 h-5 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11V7a1 1 0 00-2 0v4a1 1 0 002 0zm0 6a1 1 0 10-2 0 1 1 0 002 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <p className="text-sm font-semibold">{errors.text.message}</p>
-          </div>
-        )}
+    <div className="p-6 bg-gray-900 bg-opacity-50 rounded-2xl shadow-lg text-white">
+      <h2 className="text-2xl font-bold mb-6 text-center text-purple-400">Generate Prompt</h2>
+      
+      <form onSubmit={handleSubmit(handleGeneratePrompt)} className="flex flex-col gap-6">
+        {/* Voice Description */}
+        <div className="flex flex-col gap-2">
+          <Label className="text-blue-300">Voice Description</Label>
+          <Textarea
+            placeholder="Enter voice description"
+            {...register("description")}
+            className="bg-gray-800 border-purple-500 text-white placeholder-gray-400"
+            rows={4}
+            disabled={loading}
+          />
+          {errors.description && (
+            <p className="text-red-400 text-sm">{errors.description.message}</p>
+          )}
+        </div>
+
+        {/* Text Input */}
+        <div className="flex flex-col gap-2">
+          <Label className="text-blue-300">Text</Label>
+          <Textarea
+            placeholder="Enter text to say"
+            {...register("text")}
+            className="bg-gray-800 border-purple-500 text-white placeholder-gray-400"
+            rows={6}
+            disabled={loading}
+          />
+          {errors.text && (
+            <p className="text-red-400 text-sm">{errors.text.message}</p>
+          )}
+        </div>
+
+        {/* Generate Button */}
         <Button
           type="submit"
           isLoading={loading}
           disabled={!text || !description}
-          className="w-[150px]"
+          className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90"
         >
           {loading ? "Generating..." : "Generate Prompt"}
         </Button>
       </form>
 
-      {/* Render audio previews */}
-      {audioSources &&
-        audioSources.map((src, index) => (
-          <div key={index} className="mt-4 flex gap-5 justify-center">
-            <div>
-              <Label>Preview {index + 1}</Label>
-              <audio controls>
+      {/* Audio Previews */}
+      {audioSources.length > 0 && (
+        <div className="mt-8 space-y-6">
+          {audioSources.map((src, index) => (
+            <div key={index} className="p-4 bg-gray-800 rounded-lg shadow-md">
+              <Label className="text-blue-300">Preview {index + 1}</Label>
+              <audio controls className="w-full mt-2">
                 <source src={src} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
-            </div>
-            <div className="flex items-center space-x-2 mt-2">
               <Button
                 onClick={() => handleDownload(src, index)}
-                className="text-sm"
+                className="mt-4 w-full bg-gradient-to-r from-green-400 to-green-600 hover:opacity-90 flex items-center justify-center gap-2"
               >
-                <ArrowDownToLine />
+                <ArrowDownToLine className="w-5 h-5" /> Download
               </Button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      )}
     </div>
   );
 }
