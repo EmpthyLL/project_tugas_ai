@@ -25,7 +25,7 @@ const schema = yup.object({
     .max(1000),
 });
 
-export default function SelectTab() {
+export default function SelectTab({ setRender }) {
   const [audioUrl, setAudioUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [voiceId, setVoiceId] = useState(null);
@@ -49,7 +49,6 @@ export default function SelectTab() {
   useEffect(() => {
     async function Get() {
       const { voices: data } = await getVoices();
-      console.log(data);
       setVoices(data.map(({ voice_id, name }) => ({ id: voice_id, name })));
     }
     Get();
@@ -62,6 +61,7 @@ export default function SelectTab() {
     try {
       const audioUrl = await generateVoice(text, voiceId);
       if (audioUrl) setAudioUrl(audioUrl);
+      setRender("select");
     } catch (error) {
       console.log(error);
     } finally {
@@ -78,7 +78,9 @@ export default function SelectTab() {
 
   return (
     <div className="p-6 bg-gray-800 bg-opacity-50 rounded-2xl shadow-lg text-white">
-      <h2 className="text-2xl font-bold mb-6 text-center text-blue-400">Generate Speech</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-blue-400">
+        Generate Speech
+      </h2>
       <form
         onSubmit={handleSubmit(handleGenerate)}
         className="flex flex-col gap-6"

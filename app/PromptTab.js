@@ -22,7 +22,7 @@ const schema = yup.object({
     .max(1000),
 });
 
-export default function PromptTab() {
+export default function PromptTab({ setRender }) {
   const [audioSources, setAudioSources] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -49,6 +49,7 @@ export default function PromptTab() {
     try {
       const audioUrls = await voiceDesign(description, text);
       if (audioUrls) setAudioSources(audioUrls);
+      setRender("prompt");
     } catch (error) {
       console.log(error);
     } finally {
@@ -65,9 +66,14 @@ export default function PromptTab() {
 
   return (
     <div className="p-6 bg-gray-900 bg-opacity-50 rounded-2xl shadow-lg text-white">
-      <h2 className="text-2xl font-bold mb-6 text-center text-purple-400">Generate Prompt</h2>
-      
-      <form onSubmit={handleSubmit(handleGeneratePrompt)} className="flex flex-col gap-6">
+      <h2 className="text-2xl font-bold mb-6 text-center text-purple-400">
+        Generate Prompt
+      </h2>
+
+      <form
+        onSubmit={handleSubmit(handleGeneratePrompt)}
+        className="flex flex-col gap-6"
+      >
         {/* Voice Description */}
         <div className="flex flex-col gap-2">
           <Label className="text-blue-300">Voice Description</Label>
