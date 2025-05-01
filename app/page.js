@@ -11,7 +11,7 @@ export default function VoiceCloner() {
   const router = useRouter();
   const dataParams = useSearchParams();
   const currentTab = dataParams.get("tab") || "select";
-  const [render, setRender] = useState("prompt");
+  const [render, setRender] = useState(null);
 
   return (
     <section className="w-full bg-gradient-to-br from-[#1a1a40] via-[#3f0d85] to-[#8a2be2] transition-all duration-700">
