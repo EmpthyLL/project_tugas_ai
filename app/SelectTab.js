@@ -56,6 +56,7 @@ export default function SelectTab({ setRender }) {
 
   const handleGenerate = async () => {
     if (!text) return;
+    setRender(null);
     setLoading(true);
     setAudioUrl(null);
     try {

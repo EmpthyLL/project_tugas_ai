@@ -17,7 +17,11 @@ export default function VoiceCloner() {
     <section className="w-full bg-gradient-to-br from-[#1a1a40] via-[#3f0d85] to-[#8a2be2] transition-all duration-700">
       <div
         className={`min-h-screen ${
-          render ? (render === "select" ? "pb-20" : "pb-[575px]") : ""
+          render
+            ? render === "select"
+              ? "pb-[105px] c1:pb-20"
+              : "pb-[620px] c1:pb-[580px]"
+            : ""
         } flex flex-col items-center justify-start`}
       >
         {/* Tabs */}
