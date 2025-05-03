@@ -136,38 +136,6 @@ export default function PromptTab({ setRender }) {
           ))}
         </div>
       )}
-      <div className="mt-8 space-y-6">
-        <div className="p-4 bg-gray-800 rounded-lg shadow-md">
-          <Label className="text-blue-300">Preview 1</Label>
-          <audio controls className="w-full mt-2">
-            <source src={"src"} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
-          <Button className="mt-4 w-full bg-gradient-to-r from-green-400 to-green-600 hover:opacity-90 flex items-center justify-center gap-2">
-            <ArrowDownToLine className="w-5 h-5" /> Download
-          </Button>
-        </div>{" "}
-        <div className="p-4 bg-gray-800 rounded-lg shadow-md">
-          <Label className="text-blue-300">Preview 1</Label>
-          <audio controls className="w-full mt-2">
-            <source src={"src"} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
-          <Button className="mt-4 w-full bg-gradient-to-r from-green-400 to-green-600 hover:opacity-90 flex items-center justify-center gap-2">
-            <ArrowDownToLine className="w-5 h-5" /> Download
-          </Button>
-        </div>{" "}
-        <div className="p-4 bg-gray-800 rounded-lg shadow-md">
-          <Label className="text-blue-300">Preview 1</Label>
-          <audio controls className="w-full mt-2">
-            <source src={"src"} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
-          <Button className="mt-4 w-full bg-gradient-to-r from-green-400 to-green-600 hover:opacity-90 flex items-center justify-center gap-2">
-            <ArrowDownToLine className="w-5 h-5" /> Download
-          </Button>
-        </div>
-      </div>
     </div>
   );
 }
