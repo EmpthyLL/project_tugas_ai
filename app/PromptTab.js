@@ -10,16 +10,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 const schema = yup.object({
-  description: yup
+    description: yup
     .string()
-    .required()
-    .min(21, "Description must be at least 21 characters")
-    .max(1000),
+    .required("Description is required")
+    .min(21, "Description must be more than 20 characters")
+    .max(1000, "Description can not exceeding 1000 characters"),
   text: yup
     .string()
-    .required()
-    .min(100, "Text must be at least 100 characters")
-    .max(1000),
+    .required("Text is required")
+    .min(100, "Text must be more than or equal to 100 characters")
+    .max(1000, "Text can not exceeding 1000 characters"),
 });
 
 export default function PromptTab({ setRender }) {
