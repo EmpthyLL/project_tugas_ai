@@ -20,9 +20,9 @@ import { Label } from "@/components/ui/label";
 const schema = yup.object({
   text: yup
     .string()
-    .required()
-    .min(100, "Text must be at least 100 characters")
-    .max(1000),
+    .required("Text is required")
+    .min(100, "Text must be more than or equal to 100 characters")
+    .max(1000, "Text can not exceeding 1000 characters"),
 });
 
 export default function SelectTab({ setRender }) {
