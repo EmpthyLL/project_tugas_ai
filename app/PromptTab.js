@@ -18,7 +18,7 @@ const schema = yup.object({
   text: yup
     .string()
     .required("Text is required")
-    .min(100, "Text must be at least to 100 characters")
+    .min(100, "Text must be at least 100 characters")
     .max(1000, "Text can not exceeding 1000 characters"),
 });
 
