@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import toast from "react-hot-toast";
 
 const schema = yup.object({
-    description: yup
+  description: yup
     .string()
     .required("Description is required")
     .min(20, "Description must be at least 20 characters")
@@ -51,8 +52,12 @@ export default function PromptTab({ setRender }) {
       const audioUrls = await voiceDesign(description, text);
       if (audioUrls) setAudioSources(audioUrls);
       setRender("prompt");
+      toast.success("Voice generated!");
     } catch (error) {
-      console.log(error);
+      if (error.status === 403) {
+        toast.error("Your prompt contain undesire words!");
+      }
+      toast.error(error.responce.data.detail.message || error.message);
     } finally {
       setLoading(false);
     }

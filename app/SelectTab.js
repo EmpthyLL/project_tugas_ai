@@ -63,8 +63,9 @@ export default function SelectTab({ setRender }) {
       const audioUrl = await generateVoice(text, voiceId);
       if (audioUrl) setAudioUrl(audioUrl);
       setRender("select");
+      toast.success("Voice generated!");
     } catch (error) {
-      console.log(error);
+      toast.error(error.responce.data.detail.message || error.message);
     } finally {
       setLoading(false);
     }
