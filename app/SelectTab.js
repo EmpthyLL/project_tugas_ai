@@ -20,9 +20,9 @@ import { Label } from "@/components/ui/label";
 const schema = yup.object({
   text: yup
     .string()
-    .required()
+    .required("Text is required")
     .min(100, "Text must be at least 100 characters")
-    .max(1000),
+    .max(1000, "Text can not exceeding 1000 characters"),
 });
 
 export default function SelectTab({ setRender }) {
@@ -63,8 +63,9 @@ export default function SelectTab({ setRender }) {
       const audioUrl = await generateVoice(text, voiceId);
       if (audioUrl) setAudioUrl(audioUrl);
       setRender("select");
+      toast.success("Voice generated!");
     } catch (error) {
-      console.log(error);
+      toast.error(error.responce.data.detail.message || error.message);
     } finally {
       setLoading(false);
     }
